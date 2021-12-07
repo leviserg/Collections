@@ -46,5 +46,107 @@ namespace Collections
             }
 
         }
+
+        public string isBalanced(string s)
+        {
+            /*
+            int n = -1;
+            while (s.Length != n)
+            {
+                n = s.Length;
+                s = s.Replace("()", String.Empty);
+                s = s.Replace("[]", String.Empty);
+                s = s.Replace("{}", String.Empty);
+            }
+
+            if (s.Length == 0)
+                return "YES";
+            return "NO";
+            */
+
+            Stack<Char> stack = new Stack<Char>();
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                char ch = s[i];
+                if (ch == '{' || ch == '(' || ch == '[')
+                {
+                    stack.Push(ch);
+                }
+                else if (stack.Count == 0)
+                {
+                    return "NO";
+                }
+                else if (ch == '}')
+                {
+                    if (stack.Peek() == '{')
+                    {
+                        stack.Pop();
+                    }
+                    else { return "NO"; }
+
+                }
+                else if (ch == ']')
+                {
+                    if (stack.Peek() == '[')
+                    {
+                        stack.Pop();
+                    }
+                    else { return "NO"; }
+
+                }
+                else if (ch == ')')
+                {
+                    if (stack.Peek() == '(')
+                    {
+                        stack.Pop();
+                    }
+                    else { return "NO"; }
+
+                }
+            }
+            if (stack.Count == 0)
+            {
+                return "YES";
+            }
+            return "NO";
+        }
+
+        public int EvalRPN(string[] tokens)
+        {
+            Stack<string> stack = new Stack<string>();
+            string varA, varB, res;
+            for (int i = 0; i < tokens.Length; i++)
+            {
+                if (tokens[i].Equals("+") || tokens[i].Equals("*") || tokens[i].Equals("-") || tokens[i].Equals("/"))
+                {
+                    varB = stack.Pop();
+                    varA = stack.Pop();
+                    res = Calculate(tokens[i], varA, varB);
+                    stack.Push(res);
+                }
+                else
+                {
+                    stack.Push(tokens[i]);
+                }
+            }
+            return Int32.Parse(stack.Pop());
+        }
+
+        public static string Calculate(string sign, string var1, string var2)
+        {
+            int res = 0;
+            switch (sign)
+            {
+                case "*": res = Int32.Parse(var1) * Int32.Parse(var2); break;
+                case "/": res = Int32.Parse(var1) / Int32.Parse(var2); break;
+                case "+": res = Int32.Parse(var1) + Int32.Parse(var2); break;
+                case "-": res = Int32.Parse(var1) - Int32.Parse(var2); break;
+                default: res = 0; break;
+            }
+            return res.ToString();
+        }
+
+
     }
 }

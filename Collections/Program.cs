@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Collections
 {
@@ -10,8 +11,9 @@ namespace Collections
     {
         static void Main(string[] args)
         {
+
             // ======= LINQ =======
-            
+
             if (EmployeeCollection.Employees.Count == 0)
             {
                 EmployeeCollection.SetEmployees();
@@ -44,6 +46,12 @@ namespace Collections
             StackExample stackExample = new StackExample(names);
             stackExample.Run();
 
+            Console.WriteLine("======= Stack is balanced ======");
+
+            Console.WriteLine(stackExample.isBalanced("{[(])}")); // {[(])}  {[()]}  {{[[(())]]}}
+            Console.WriteLine(stackExample.isBalanced("{{[[(())]]}}"));
+
+
             Console.WriteLine("================");
 
             string expr = "122+3+5-(25-4+17)"; // 92
@@ -56,27 +64,16 @@ namespace Collections
             int resultgetValueFromExpression = getValueFromExpression(expr2);
             Console.WriteLine(resultgetValueFromExpression);
 
+            Console.WriteLine("===== Evaluate RPN {Reverse Polish Notation} ======");
+            // https://leetcode.com/explore/learn/card/queue-stack/230/usage-stack/1394/
+
+            string[] tokens = new string[] { "10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+" };
+
+            Console.WriteLine(stackExample.EvalRPN(tokens));
+
             Console.ReadLine();
         }
 
-
-        public static int getValueFromString(string str)
-        {
-            string trimExpr = str.Replace(" ", String.Empty);
-            Stack<int> numStack = new Stack<int>();
-            int j = 0;
-            for (int i = 0; i < trimExpr.Length; i++)
-            {
-                if (trimExpr[i].Equals(")"))
-                {
-                    int closedBracketIndex = i;
-                    int openBracketIndex = trimExpr.Substring(j, i).LastIndexOf("(");
-                    int resultInBrackets = getValueFromExpression(trimExpr.Substring(openBracketIndex + 1, closedBracketIndex - openBracketIndex));
-                    numStack.Push(resultInBrackets);
-                }
-            }
-            return numStack.Peek();
-        }
 
 
         public static int getValueFromExpression(string str)
@@ -144,6 +141,65 @@ namespace Collections
             }
             return res;
         }
+
+        public static void getValueFromParenthesis(string str)
+        {
+            Stack<string> resultStack = new Stack<string>();
+            StringBuilder sb = new StringBuilder();
+            string numprev, num, sign, calcresult, s;
+            s = str.Replace(" ", String.Empty);
+            for (int i = 0; i < s.Length; i++)
+            {
+                while (Char.IsDigit(s[i]) && i < s.Length - 1)
+                {
+                    sb.Append(s[i]);
+                    i++;
+                }
+                char ch = s[i];
+                if (i == s.Length - 1 && Char.IsDigit(ch)) sb.Append(ch);
+                num = sb.ToString();
+                if (sb.Length > 0) resultStack.Push(num);
+                sb.Clear();
+
+                if (ch.Equals('(') || ch.Equals('+') || ch.Equals('-') || ch.Equals(')')) resultStack.Push(ch.ToString());
+
+                if (ch.Equals(')') && resultStack.Count > 2)
+                {
+                    while (resultStack.Count > 2)
+                    {
+                        if (resultStack.Count > 0 && resultStack.Peek().Equals(")"))
+                        {
+                            resultStack.Pop();
+                        }
+                        num = resultStack.Pop();
+                        sign = resultStack.Pop();
+                        numprev = resultStack.Pop();
+                        calcresult = StackExample.Calculate(sign, numprev, num);
+                        if (resultStack.Count > 0 && resultStack.Peek().Equals("("))
+                        {
+                            resultStack.Pop();
+                        }
+                        resultStack.Push(calcresult);
+                    }
+                }
+            }
+
+            while (resultStack.Count > 2)
+            {
+                num = resultStack.Pop();
+                sign = resultStack.Pop();
+                numprev = resultStack.Pop();
+                calcresult = StackExample.Calculate(sign, numprev, num);
+                resultStack.Push(calcresult);
+            }
+
+            int stackLength = resultStack.Count;
+            for (int i = 0; i < stackLength; i++)
+            {
+                Console.WriteLine(resultStack.Pop());
+            }
+        }
+
     }
 
 }
