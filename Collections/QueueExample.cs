@@ -42,7 +42,6 @@ namespace Collections
                 Person dequeuedPerson = personsQueue.Dequeue();
                 Console.WriteLine($"Dequeued person is {dequeuedPerson.Name}. Persons left in queue : {personsQueue.Count}.");
             }
-
         }
 
     }
