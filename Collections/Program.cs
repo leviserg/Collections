@@ -64,12 +64,31 @@ namespace Collections
             int resultgetValueFromExpression = getValueFromExpression(expr2);
             Console.WriteLine(resultgetValueFromExpression);
 
-            Console.WriteLine("===== Evaluate RPN {Reverse Polish Notation} ======");
+            Console.WriteLine("===== Evaluate RPN {Reverse Polish Notation - using Stack} ======");
             // https://leetcode.com/explore/learn/card/queue-stack/230/usage-stack/1394/
 
             string[] tokens = new string[] { "10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+" };
 
             Console.WriteLine(stackExample.EvalRPN(tokens));
+
+            Console.WriteLine("===== Evaluate NumberOfIslands {using Queue} ======");
+            // https://leetcode.com/explore/learn/card/queue-stack/231/practical-application-queue/1374/
+
+            char[][] grid1 = {
+              new char[] {'1', '1', '1', '1', '0'},
+              new char[] {'1', '1', '0', '1', '0'},
+              new char[] {'1', '1', '0', '0', '0'},
+              new char[] {'0', '0', '0', '0', '0'}
+            }; // islands = 1
+
+            char[][] grid3 = {
+              new char[] {'0', '1', '0', '0', '1','0', '0', '0', '0', '1'},
+              new char[] {'0', '1', '1', '1', '0','0', '0', '0', '0', '1'},
+              new char[] {'0', '1', '0', '1', '0','0', '0', '0', '0', '1'},
+              new char[] {'1', '1', '0', '1', '0','0', '0', '0', '0', '1' }
+            }; // islands = 3
+
+            Console.WriteLine(NumberOfIslandsQueue.NumIslands(grid3));
 
             Console.ReadLine();
         }
