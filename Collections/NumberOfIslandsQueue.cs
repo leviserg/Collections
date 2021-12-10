@@ -9,30 +9,23 @@ namespace Collections
     static class NumberOfIslandsQueue
     {
 
-        /*
-            char[][] grid3 = {
-
-              new char[] {'1', '1', '0', '1', '0'},
-              new char[] {'1', '1', '0', '0', '0'},
-              new char[] {'0', '0', '1', '0', '0'},
-              new char[] {'1', '0', '0', '1', '1'}
-
-            }; // islands = 3
-        */
-
         private static Queue<IslandNode> qs = new Queue<IslandNode>();
-
+        private static bool[,] visited;
         public static int NumIslands(char[][] grid)
         {
             int resultIslands = 0;
-            for (int i = 0; i < grid.Length; i++)
+            int rows = grid.Length;
+            int cols = grid[0].Length;
+            visited = new bool[rows, cols];
+            for (int i = 0; i < rows; i++)
             {
-                for (int j = 0; j < grid[i].Length; j++)
+                for (int j = 0; j < cols; j++)
                 {
                     IslandNode curNode = new IslandNode(i, j);
-                    if (grid[i][j].Equals('1'))
+                    Tuple<int, int> v = new Tuple<int, int>(i, j);
+                    if (grid[i][j].Equals('1') && !visited[i,j])
                     {
-                        grid[i][j] = 'x';
+                        visited[i,j] = true;
                         checkSurrounds(grid, i, j);
                         while (qs.Count > 0)
                         {
@@ -48,28 +41,29 @@ namespace Collections
 
         public static void checkSurrounds(char[][] grid, int row, int col)
         {
-            if (col < grid[row].Length - 1 && grid[row][col + 1].Equals('1'))
+
+            if (col < grid[row].Length - 1 && grid[row][col + 1].Equals('1') && !visited[row, col + 1])
             {
                 qs.Enqueue(new IslandNode(row, col + 1));
-                grid[row][col + 1] = 'x';
+                visited[row, col + 1] = true;
+                //grid[row][col + 1] = 'x';
             }
-            if (row < grid.Length - 1 && grid[row + 1][col].Equals('1'))
+            if (row < grid.Length - 1 && grid[row + 1][col].Equals('1') && !visited[row + 1, col])
             {
                 qs.Enqueue(new IslandNode(row + 1, col));
-                grid[row + 1][col] = 'x';
+                visited[row + 1, col] = true;
             }
-            if (col > 0 && grid[row][col - 1].Equals('1'))
+            if (col > 0 && grid[row][col - 1].Equals('1') && !visited[row, col - 1])
             {
                 qs.Enqueue(new IslandNode(row, col - 1));
-                grid[row][col - 1] = 'x';
+                visited[row, col - 1] = true;
             }
-            if (row > 0 && grid[row - 1][col].Equals('1'))
+            if (row > 0 && grid[row - 1][col].Equals('1') && !visited[row - 1, col])
             {
                 qs.Enqueue(new IslandNode(row - 1, col));
-                grid[row - 1][col] = 'x';
+                visited[row - 1, col] = true;
             }
         }
-
 
         public static void PrintGrid(char[][] grid)
         {
